@@ -37,9 +37,10 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            //basic notification
             ListTile(
               onTap: () {
-                LocalNotificationService.showNotification(
+                LocalNotificationService.showBasicNotification(
                     title: "Hello",
                     body: "Welcome to the Local Notification Example");
               },
@@ -55,6 +56,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            //repeated notification
             ListTile(
               onTap: () {
                 LocalNotificationService.showRepeatedNotification(
@@ -73,6 +75,31 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
+            //Scheduled notification
+            ListTile(
+              onTap: () {
+                LocalNotificationService.showScheduledNotification(
+                    title: "ScheduledHello",
+                    body: "Welcome to the Local Notification Example");
+              },
+              leading: Icon(Icons.notifications),
+              title: const Text('Scheduled Notification'),
+              trailing: IconButton(
+                onPressed: () {
+                  LocalNotificationService.cancelNotification(2);
+                },
+                icon: Icon(
+                  Icons.cancel,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+            //cancel all notification
+            ElevatedButton(
+                onPressed: () {
+                  LocalNotificationService.flutterLocalNotificationsPlugin
+                      .cancelAll();
+                }, child: Text("Cancel All Notification")),
           ],
         ),
       ),
