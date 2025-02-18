@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -6,8 +8,12 @@ import 'package:timezone/timezone.dart' as tz;
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  static StreamController<NotificationResponse> streamController =
+      StreamController();
 
-  static onTap(NotificationResponse notificationResponse) {}
+  static onTap(NotificationResponse notificationResponse) {
+    streamController.add(notificationResponse);
+  }
 
   static Future<void> init() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
@@ -35,18 +41,17 @@ class LocalNotificationService {
       icon: '@mipmap/ic_launcher',
       importance: Importance.max,
       priority: Priority.high,
-      sound: RawResourceAndroidNotificationSound(
-          'sound.mp3'.split('.')[0]),
+      sound: RawResourceAndroidNotificationSound('sound.mp3'.split('.')[0]),
     );
 
-     NotificationDetails details =
+    NotificationDetails details =
         NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
       0,
       title,
       body,
       details,
-      payload: 'item x',
+      payload: 'Basic Notification',
     );
   }
 
@@ -72,7 +77,7 @@ class LocalNotificationService {
       body,
       RepeatInterval.everyMinute,
       details,
-      payload: 'item x',
+      payload: 'Repeated Notification',
       androidScheduleMode: AndroidScheduleMode.alarmClock,
     );
   }
@@ -108,6 +113,7 @@ class LocalNotificationService {
       body,
       scheduledDate,
       details,
+      payload: 'Scheduled Notification',
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidScheduleMode: AndroidScheduleMode.exact,
