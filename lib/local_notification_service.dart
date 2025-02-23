@@ -118,6 +118,49 @@ class LocalNotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       androidScheduleMode: AndroidScheduleMode.exact,
     );
+  } // Scheduled Daily notification
+
+  static Future<void> showScheduledDailyNotification({
+    required String title,
+    required String body,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      '3',
+      'Scheduled Daily name',
+      icon: '@mipmap/ic_launcher',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails details =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation('Africa/Cairo'));
+    var currentTime = tz.TZDateTime.now(tz.local);
+    var scheduledTime = tz.TZDateTime(
+      tz.local,
+      currentTime.year,
+      currentTime.month,
+      currentTime.day,
+      9,
+    );
+    if (scheduledTime.isBefore(currentTime)) {
+      scheduledTime = scheduledTime.add(const Duration(days: 1));
+    }
+
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      2,
+      title,
+      body,
+      scheduledTime,
+      details,
+      payload: 'Scheduled Daily Notification',
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exact,
+    );
   }
 
   static void cancelNotification(int id) async {
